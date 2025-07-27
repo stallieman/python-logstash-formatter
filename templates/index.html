@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logstash Pipeline Formatter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Ace Editor CSS -->
+    <style>
+        #editor-container {
+            height: 300px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-controls">
+            <h1>Logstash Pipeline Formatter</h1>
+            <button id="close-app" class="close-button" onclick="closeApp()">✕ Close Application</button>
+        </div>
+        
+        <h2>Upload .conf File</h2>
+        <form id="upload-form" method="post" enctype="multipart/form-data" action="{{ url_for('upload_file') }}">
+            <label for="file-upload">Select your Logstash pipeline configuration (.conf file):</label>
+            <input type="file" id="file-upload" name="file" accept=".conf" required>
+            <button type="submit">Format File</button>
+        </form>
+
+        <h2>Or Paste Pipeline Content</h2>
+        <form id="paste-form" method="post" action="{{ url_for('format_pipeline_text') }}">
+            <textarea id="pipeline-editor" name="pipeline" style="display: none;">{{ pipeline_text|default('') }}</textarea>
+            <div id="editor-container"></div>
+            <button type="submit">Format Text</button>
+        </form>
+
+        {% if formatted_output %}
+        <h2>Formatted Output</h2>
+        <button id="copy-button" onclick="copyFormattedOutput()">Copy to Clipboard</button>
+        <ol id="formatted-output" class="formatted-output">
+            {% for line in formatted_output.split('\n') %}
+            <li><code>{{ line }}</code></li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+
+        {% if errors %}
+        <h2>Errors</h2>
+        <ul class="error-list">
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if fixes_applied %}
+        <h2>🔧 Automatic Fixes Applied</h2>
+        <ul class="fixes-list">
+            {% for fix in fixes_applied %}
+            <li class="fix-item">✅ {{ fix }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Include Ace Editor JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-text.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-github.min.js"></script>
+    
+    <script>
+        // Initialize Ace Editor
+        const editor = ace.edit("editor-container");
+        editor.setTheme("ace/theme/github");
+        editor.session.setMode("ace/mode/text");
+        editor.setOptions({
+            showLineNumbers: true,
+            highlightActiveLine: true,
+            highlightSelectedWord: true,
+            behavioursEnabled: true,
+            wrapBehavioursEnabled: true,
+            showPrintMargin: false,
+            fontSize: 14
+        });
+
+        // Set initial content from textarea
+        const initialContent = document.getElementById("pipeline-editor").value || "";
+        editor.setValue(initialContent, -1);
+
+        // Synchronize editor content with textarea on form submit
+        document.getElementById("paste-form").addEventListener("submit", () => {
+            document.getElementById("pipeline-editor").value = editor.getValue();
+        });
+
+        // Copy function
+        function copyFormattedOutput() {
+            var outputElement = document.getElementById("formatted-output");
+            if (outputElement) {
+                var lines = outputElement.getElementsByTagName("li");
+                var text = "";
+                for (var i = 0; i < lines.length; i++) {
+                    text += lines[i].innerText + "\n";
+                }
+                navigator.clipboard.writeText(text).then(function() {
+                    alert("Formatted pipeline copied to clipboard!");
+                }, function(err) {
+                    alert("Failed to copy: " + err);
+                });
+            }
+        }
+
+        // Close application function
+        function closeApp() {
+            if (confirm("Are you sure you want to close the Logstash Pipeline Formatter?")) {
+                fetch('/shutdown', {method: 'POST'})
+                    .then(() => {
+                        window.close();
+                        alert("Application is shutting down...");
+                    })
+                    .catch(() => {
+                        window.close();
+                    });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.close-button:hover {
+    background-color: #c82333;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+form {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+input[type="file"],
+textarea {
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px;
+    font-family: monospace;
+}
+
+button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+.formatted-output {
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    list-style: decimal outside;
+    font-family: monospace;
+}
+
+.formatted-output li {
+    white-space: pre;
+    margin: 0;
+}
+
+.error-list {
+    color: red;
+    font-family: Arial, sans-serif;
+}
+
+.error-list li {
+    background: #ffe6e6;
+    border-left: 4px solid #ff4444;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+}
+
+.fixes-list {
+    list-style: none;
+    padding: 0;
+}
+
+.fix-item {
+    background: #e6ffe6;
+    border-left: 4px solid #44cc44;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    color: #2d5016;
+}
+
+.flashes {
+    list-style: none;
+    padding: 0;
+    color: green;
+}
+
+/* CodeMirror match bracket style */
+.CodeMirror-matchingbracket {
+    color: red !important;
+    font-weight: bold;
+}
+
+/* Ace Editor bracket highlight */
+.ace_bracket_highlight {
+    background-color: red !important;
+    color: white !important;
+    font-weight: bold !important;
+    border: 1px solid darkred !important;
+}
