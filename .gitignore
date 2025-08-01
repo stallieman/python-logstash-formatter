@@ -52,6 +52,7 @@ uploads/*
 !uploads/.gitkeep
 build.log
 *.zip
+*.exe
 
 # Temporary files
 *.tmp

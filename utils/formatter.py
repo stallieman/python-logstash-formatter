@@ -102,10 +102,12 @@ def format_logstash_pipeline(file_content):
                 
                 # Skip values that already have quotes, arrays, numbers, booleans, template variables,
                 # and configuration blocks (like "codec => line {")
+                # Also skip values that end with } as they might be part of syntax like "nested => true }"
                 if not ('"' in value_part or "'" in value_part) and \
                    not (value_part.startswith('[') and value_part.endswith(']')) and \
                    not value_part.isdigit() and value_part not in ['true', 'false'] and \
                    not value_part.startswith('{') and not value_part.endswith('{') and \
+                   not value_part.endswith('}') and \
                    not '%{' in value_part and \
                    (' ' in value_part or '-' in value_part or '.' in value_part):
                     # Don't quote template variables like %{...} or config blocks like "line {"

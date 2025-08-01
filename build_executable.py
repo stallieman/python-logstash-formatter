@@ -12,7 +12,7 @@ from pathlib import Path
 
 def build_executable():
     """Build the standalone executable"""
-    print("🚀 Building Logstash Pipeline Formatter executable...")
+    print("Building Logstash Pipeline Formatter executable...")
     
     # Define paths
     script_dir = Path(__file__).parent
@@ -46,27 +46,27 @@ def build_executable():
     
     try:
         subprocess.run(cmd, check=True, cwd=script_dir)
-        print("✅ Build completed successfully!")
+        print("Build completed successfully!")
         
         # Check if executable was created
         exe_name = "LogstashPipelineFormatter.exe" if sys.platform.startswith('win') else "LogstashPipelineFormatter"
         exe_path = dist_dir / exe_name
         
         if exe_path.exists():
-            print(f"📦 Executable created: {exe_path}")
-            print(f"📏 File size: {exe_path.stat().st_size / 1024 / 1024:.1f} MB")
+            print(f"Executable created: {exe_path}")
+            print(f"File size: {exe_path.stat().st_size / 1024 / 1024:.1f} MB")
         else:
-            print("❌ Executable not found!")
+            print("Executable not found!")
             
     except subprocess.CalledProcessError as e:
-        print(f"❌ Build failed: {e}")
+        print(f"Build failed: {e}")
         return False
     
     return True
 
 def create_distribution_package():
     """Create a complete distribution package"""
-    print("📦 Creating distribution package...")
+    print("Creating distribution package...")
     
     script_dir = Path(__file__).parent
     dist_dir = script_dir / "dist"
@@ -83,7 +83,7 @@ def create_distribution_package():
     
     if exe_path.exists():
         shutil.copy2(exe_path, package_dir)
-        print(f"✅ Copied executable to package")
+        print(f"Copied executable to package")
     
     # Create README for distribution
     readme_content = """# Logstash Pipeline Formatter
@@ -125,7 +125,7 @@ All dependencies are bundled within the executable.
 """
     
     (package_dir / "README.txt").write_text(readme_content)
-    print("✅ Created README.txt")
+    print("Created README.txt")
     
     # Create batch file for easy startup (Windows)
     if sys.platform.startswith('win'):
@@ -134,14 +134,14 @@ echo Starting Logstash Pipeline Formatter...
 LogstashPipelineFormatter.exe
 pause"""
         (package_dir / "Start_LogstashFormatter.bat").write_text(batch_content)
-        print("✅ Created startup batch file")
+        print("Created startup batch file")
     
-    print(f"📦 Distribution package created in: {package_dir}")
+    print(f"Distribution package created in: {package_dir}")
     
     # Create zip file
     zip_path = script_dir / "LogstashPipelineFormatter_Portable"
     shutil.make_archive(str(zip_path), 'zip', package_dir)
-    print(f"🎁 Zip file created: {zip_path}.zip")
+    print(f"Zip file created: {zip_path}.zip")
 
 if __name__ == "__main__":
     print("=" * 60)
@@ -151,17 +151,17 @@ if __name__ == "__main__":
     # Check if PyInstaller is installed
     try:
         import PyInstaller
-        print(f"✅ PyInstaller found: {PyInstaller.__version__}")
+        print(f"PyInstaller found: {PyInstaller.__version__}")
     except ImportError:
-        print("❌ PyInstaller not found. Installing...")
+        print("PyInstaller not found. Installing...")
         subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
-        print("✅ PyInstaller installed")
+        print("PyInstaller installed")
     
     # Build executable
     if build_executable():
         create_distribution_package()
-        print("\n🎉 Build process completed successfully!")
-        print("📁 Ready for distribution: LogstashPipelineFormatter_Portable.zip")
+        print("\nBuild process completed successfully!")
+        print("Ready for distribution: LogstashPipelineFormatter_Portable.zip")
     else:
-        print("\n❌ Build process failed!")
+        print("\nBuild process failed!")
         sys.exit(1)
